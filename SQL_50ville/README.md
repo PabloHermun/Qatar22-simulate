@@ -1,6 +1,6 @@
 # Fiftyville crime mistery
 
-This work was submitted as part of the solution to problem set 8 of Harvard's 2022 - CS50 course.  
+This work was submitted as part of the solution to problem set 8 of Harvard's 2022 - CS50 course. It should not be consulted by other students as a guide to solve the problem itself!  
 Solution author: Pablo A Hernandez Munguia
 
 The task consists in unravelling the identity of a thief through SQL queries on the database **fiftyville.db**.  
