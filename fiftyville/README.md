@@ -1,12 +1,12 @@
 # Fiftyville crime mistery
 
 This work was submitted as part of the solution to problem set 8 of Harvard's 2022 - CS50 course.  
-Solution author: Pablo A Hernandez Munguia\
+Solution author: Pablo A Hernandez Munguia
 
 
 The task consist in unraveling the identity of a thief through SQL queries on the database 'fiftyville.db'. 
-The file **log.sql** contains a log registering the thought process and the sql queries performed to get to the solution.
-
+The file **log.sql** contains a log registering the thought process and the sql (sqlite3) queries performed to get to the solution.
+Several ´.tables´ and ´.schema´commands were executed throughout the process.
 
 The only information given to start the task is the following:
 
