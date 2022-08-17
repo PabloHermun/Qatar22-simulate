@@ -3,7 +3,7 @@
 This work was submitted as part of the solution to problem set 8 of Harvard's 2022 - CS50 course.
 Solution author: Pablo A Hernandez Munguia
 
-The task consist in unraveling the identity of a thief through SQL queries on the database 'fiftyville.db'.
+The task consists in unravelling the identity of a thief through SQL queries on the database 'fiftyville.db'.
 The file **log.sql** contains a log registering the thought process and the sql queries performed to get to the solution.
 
 The only information given to start the task is the following:
