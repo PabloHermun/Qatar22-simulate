@@ -2,7 +2,7 @@
 
 This work was submitted as part of the solution to problem set 8 of Harvard's 2022 - CS50 course.
 
-Solution author: Pablo A Hernandez Munguia
+Solution author: Pablo A Hernandez Munguia\\
 
 
 The task consist in unraveling the identity of a thief through SQL queries on the database 'fiftyville.db'.
