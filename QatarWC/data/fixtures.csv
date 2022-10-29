@@ -1,0 +1,65 @@
+match,date,team1,team2,stage
+1,2022-11-21,QAT,ECU,group matches
+2,2022-11-21,SEN,NED,group matches
+3,2022-11-21,ENG,IRN,group matches
+4,2022-11-21,USA,WAL,group matches
+5,2022-11-22,FRA,AUS,group matches
+6,2022-11-22,DEN,TUN,group matches
+7,2022-11-22,MEX,POL,group matches
+8,2022-11-22,ARG,KSA,group matches
+9,2022-11-23,BEL,CAN,group matches
+10,2022-11-23,ESP,CRC,group matches
+11,2022-11-23,GER,JPN,group matches
+12,2022-11-23,MAR,CRO,group matches
+13,2022-11-24,SUI,CMR,group matches
+14,2022-11-24,URU,KOR,group matches
+15,2022-11-24,POR,GHA,group matches
+16,2022-11-24,BRA,SRB,group matches
+17,2022-11-25,WAL,IRN,group matches
+18,2022-11-25,QAT,SEN,group matches
+19,2022-11-25,NED,ECU,group matches
+20,2022-11-25,ENG,USA,group matches
+21,2022-11-26,TUN,AUS,group matches
+22,2022-11-26,POL,KSA,group matches
+23,2022-11-26,FRA,DEN,group matches
+24,2022-11-26,ARG,MEX,group matches
+25,2022-11-27,JPN,CRC,group matches
+26,2022-11-27,BEL,MAR,group matches
+27,2022-11-27,CRO,CAN,group matches
+28,2022-11-27,ESP,GER,group matches
+29,2022-11-28,CMR,SRB,group matches
+30,2022-11-28,KOR,GHA,group matches
+31,2022-11-28,BRA,SUI,group matches
+32,2022-11-28,POR,URU,group matches
+33,2022-11-29,WAL,ENG,group matches
+34,2022-11-29,IRN,USA,group matches
+35,2022-11-29,ECU,SEN,group matches
+36,2022-11-29,NED,QAT,group matches
+37,2022-11-30,AUS,DEN,group matches
+38,2022-11-30,TUN,FRA,group matches
+39,2022-11-30,POL,ARG,group matches
+40,2022-11-30,KSA,MEX,group matches
+41,2022-12-01,CRO,BEL,group matches
+42,2022-12-01,CAN,MAR,group matches
+43,2022-12-01,JPN,ESP,group matches
+44,2022-12-01,CRC,GER,group matches
+45,2022-12-02,GHA,URU,group matches
+46,2022-12-02,KOR,POR,group matches
+47,2022-12-02,SRB,SUI,group matches
+48,2022-12-02,CMR,BRA,group matches
+49,2022-12-03,1A,2B,round 16
+50,2022-12-03,1C,2D,round 16
+51,2022-12-04,1B,2A,round 16
+52,2022-12-04,1D,2C,round 16
+53,2022-12-05,1E,2F,round 16
+54,2022-12-05,1G,2H,round 16
+55,2022-12-06,1F,2E,round 16
+56,2022-12-06,1H,2G,round 16
+57,2022-12-09,W49,W50,quarter-finals
+58,2022-12-09,W53,W54,quarter-finals
+59,2022-12-10,W51,W52,quarter-finals
+60,2022-12-10,W55,W56,quarter-finals
+61,2022-12-13,W57,W58,semi-finals
+62,2022-12-14,W59,W60,semi-finals
+63,2022-12-17,L61,L62,third place
+64,2022-12-18,W61,W62,final
