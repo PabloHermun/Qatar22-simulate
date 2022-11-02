@@ -1,0 +1,5 @@
+numpy
+pandas
+cs50
+random
+scipy

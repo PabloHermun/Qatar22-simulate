@@ -4,13 +4,11 @@ from cs50 import SQL
 from random import randint
 from scipy.stats import rv_discrete
 
-# Simulate group stage for group A
-
 db = SQL("sqlite:///qatarwc.db")
 
 
 class Team:
-    "Football team"
+    """Football team in World Cup"""
     def __init__(self, name, group):
         self.name = name
         self.group = group
@@ -32,13 +30,13 @@ class Team:
         self.stage = 'eliminated'
 
 
-# Dict of Team instances
-TEAMS = {}
-def create_teams():    
+def create_teams(): 
+    """Loads teams from db into Team objects."""
+    # Dict of Team instances
+    TEAMS = {}   
     for i, team in enumerate(db.execute('SELECT code, "group" FROM teams;')):
         TEAMS[team['code']] = Team(team['code'], team['group'])
-
-create_teams()
+    return TEAMS
 
 def simulate_match():
     """
@@ -48,7 +46,7 @@ def simulate_match():
     """
     # Custom probability distribution of total match goals
     xk = range(13)
-    pk = (0.09, 0.18, 0.28, 0.24, 0.08, 0.065, 0.025, 0.015, 0.0105, 0.006, 0.004, 0.0025, 0.002)
+    pk = (0.09, 0.18, 0.28, 0.24, 0.08, 0.065, 0.026, 0.015, 0.010, 0.006, 0.0035, 0.0025, 0.002)
     pdist = rv_discrete(values=(xk, pk))
 
     # Generate sample
@@ -59,9 +57,9 @@ def simulate_match():
     # Return score
     return t1_goals, total_goals - t1_goals
 
-def simulate_groups():
+def simulate_group_stage():
     """"
-    Simulates the group stage for one group according to FIFA rules.
+    Simulates all the group stage matches according to FIFA rules.
     https://digitalhub.fifa.com/m/2744a0a5e3ded185/original/FIFA-World-Cup-Qatar-2022-Regulations_EN.pdf
     """
     group_matches = db.execute("SELECT match, team1, team2 FROM fixtures WHERE stage = 'group matches';")
@@ -81,7 +79,5 @@ def simulate_groups():
     groups_df.insert(2, 't1_goals', t1_goals)
     groups_df.insert(3, 't2_goals', t2_goals)
 
-    print(groups_df.head())
-
-simulate_groups()
+    print(groups_df)
 
