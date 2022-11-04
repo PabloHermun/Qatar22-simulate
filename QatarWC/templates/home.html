@@ -10,6 +10,8 @@
         <!-- FIFA api for flags-->
         <link rel="preconnect" href="https://cloudinary.fifa.com">
 
+        <link href="/static/styles.css" rel="stylesheet">
+        
         <title>
             Qatar2022 Simulate
         </title>
@@ -38,7 +40,7 @@
                                     {% endfor %}
                                     <td> 
                                         <form method="get" action="/group">
-                                            <button class="btn btn-outline-success btn-sm" name="group" value="">Simulate</button>
+                                            <button class="btn btn-outline-success btn-sm" name="group" value="" title="Simulate group">Simulate</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -51,7 +53,13 @@
                                     <td>{{match.1}}</td>
                                     <td> vs </td>
                                     <td>{{match.2}}</td>
-                                    <td></td>
+                                    <td>
+                                        <div class="btn-container">
+                                        <form method="post" action="/">
+                                            <button class="btn btn-outline-primary btn-sm" name="match" value="" title="Simulate match">Simulate</button>
+                                        </form>
+                                        </div>
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -74,7 +82,7 @@
                                     {% endfor %}
                                     <td> 
                                         <form method="get" action="/group">
-                                            <button class="btn btn-outline-success btn-sm" name="group" value="">Simulate</button>
+                                            <button class="btn btn-outline-success btn-sm" name="group" value="" title="Simulate group">Simulate</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -87,7 +95,13 @@
                                     <td>{{match.1}}</td>
                                     <td> vs </td>
                                     <td>{{match.2}}</td>
-                                    <td></td>
+                                    <td>
+                                        <div class="btn-container">
+                                        <form method="post" action="/">
+                                            <button class="btn btn-outline-primary btn-sm" name="match" value="" title="Simulate match">Simulate</button>
+                                        </form>
+                                        </div>
+                                    </td>
                                 </tr>
                                 {% endfor %}
                                 

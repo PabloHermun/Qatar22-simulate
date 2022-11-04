@@ -1,0 +1,8 @@
+/* Match button only visible on hover*/
+.btn-container {
+    opacity: 0;
+    transition: opacity 0.3s linear;
+  }
+tr:hover .btn-container { 
+    opacity: 1;
+  }
