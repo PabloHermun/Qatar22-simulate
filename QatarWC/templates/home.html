@@ -22,11 +22,15 @@
                 Simulate scenarios for a given team in the upcoming world cup!
             </h3>
             <h2>Calendar Qatar 2022</h2>
+            <p>Simulate individual matches, groups, stages...</p>
+            <form method="post" action="/">
+                <button class="btn btn-outline-success btn-sm" value="" title="Simulate all matches">Simulate groups stage</button>
+            </form>
         </header>
         <main>
-            <div class="container text-center">
+            <div class="container mx-1 text-center" style="max-width:1500px">
+                {% for label, labelp1 in zip(groups[::2], groups[1::2]) -%}
                 <div class="row">
-                    {% for label in groups[:4] -%}
                     <div class="col">
                         <table class="table table-hover caption-top">
                             <caption class="text-center">
@@ -36,7 +40,10 @@
                                 <tr>
                                     {% set tg = teams[label] %}
                                     {% for team in tg -%}
-                                    <td> {{ team }} <img title="{{names[team]}}" decoding="async" loading="lazy" height="70%" width="auto" src="https://cloudinary.fifa.com/api/v3/picture/flags-sq-2/{{team}}?tx=c_fill,g_auto,q_auto" class="image_img__3ckHZ group_imageSize__11-Uy"> </td>
+                                    <td> {{ team }} 
+                                        <img title="{{names[team]}}" decoding="async" loading="lazy" height="70%" width="auto" 
+                                                         src="https://cloudinary.fifa.com/api/v3/picture/flags-sq-2/{{team}}?tx=c_fill,g_auto,q_auto" class="image_img__3ckHZ group_imageSize__11-Uy">
+                                    </td>
                                     {% endfor %}
                                     <td> 
                                         <form method="get" action="/group">
@@ -45,40 +52,48 @@
                                     </td>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody style="font-size: 15px">
                                 {% set fg = fixtures[label] %}
                                 {% for match in fg -%}
                                 <tr>
-                                    <td name="date">{{match.0}}</td>
-                                    <td>{{match.1}}</td>
+                                    <td class="text-nowrap">{{match.date}}</td>
+                                    <td>{{match.t1}}</td>
                                     <td> vs </td>
-                                    <td>{{match.2}}</td>
-                                    <td>
+                                    <td>{{match.t2}}</td>
+                                    {% if match.id|int == simulate|int %}
+                                    <td>{{ score.0 }} : {{ score.1 }}</td>
+                                    {% else %}
+                                    <td class="py-1">
                                         <div class="btn-container">
-                                        <form method="post" action="/">
-                                            <button class="btn btn-outline-primary btn-sm" name="match" value="" title="Simulate match">Simulate</button>
+                                        <form method="get" action="/">
+                                            <button class="btn btn-outline-primary btn-sm" style="--bs-btn-padding-y: .3rem; --bs-btn-font-size: .8rem;"
+                                                    type="submit" title="Simulate match" name="match_id" value="{{match.id}}">Simulate</button>
                                         </form>
                                         </div>
                                     </td>
+                                    {% endif %}
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
-                    {%- endfor %}
-                </div>
-                <div class="row">
-                    {% for label in groups[4:] -%}
+                    <div class="col">
+
+                    </div>
+                    <div class="col">
+
+                    </div>
                     <div class="col">
                         <table class="table table-hover caption-top">
                             <caption class="text-center">
-                                Group {{ label }}
+                                Group {{ labelp1 }}
                             </caption>
                             <thead>
                                 <tr>
-                                    {% set tg = teams[label] %}
+                                    {% set tg = teams[labelp1] %}
                                     {% for team in tg -%}
-                                    <td> {{ team }} <img decoding="async" loading="lazy" height="70%" width="auto" src="https://cloudinary.fifa.com/api/v3/picture/flags-sq-2/{{team}}?tx=c_fill,g_auto,q_auto" alt="" title="" class="image_img__3ckHZ group_imageSize__11-Uy"></td>
+                                    <td> {{ team }} <img title="{{names[team]}}" decoding="async" loading="lazy" height="70%" width="auto" 
+                                                         src="https://cloudinary.fifa.com/api/v3/picture/flags-sq-2/{{team}}?tx=c_fill,g_auto,q_auto" class="image_img__3ckHZ group_imageSize__11-Uy"></td>
                                     {% endfor %}
                                     <td> 
                                         <form method="get" action="/group">
@@ -87,18 +102,19 @@
                                     </td>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {% set fg = fixtures[label] %}
+                            <tbody style="font-size: 15px">
+                                {% set fg = fixtures[labelp1] %}
                                 {% for match in fg -%}
                                 <tr>
-                                    <td name="date">{{match.0}}</td>
-                                    <td>{{match.1}}</td>
+                                    <td class="text-nowrap">{{match.date}}</td>
+                                    <td>{{match.t1}}</td>
                                     <td> vs </td>
-                                    <td>{{match.2}}</td>
-                                    <td>
+                                    <td>{{match.t2}}</td>
+                                    <td class="py-1">
                                         <div class="btn-container">
                                         <form method="post" action="/">
-                                            <button class="btn btn-outline-primary btn-sm" name="match" value="" title="Simulate match">Simulate</button>
+                                            <button class="btn btn-outline-primary btn-sm" style="--bs-btn-padding-y: .3rem; --bs-btn-font-size: .8rem;" 
+                                                    name="match" value="" title="Simulate match">Simulate</button>
                                         </form>
                                         </div>
                                     </td>
@@ -108,31 +124,27 @@
                             </tbody>
                         </table>
                     </div>
-                    {%- endfor %}
                 </div>
+                {%- endfor %}
             </div>
             <script>
-                // Change format of dates
+                /* Change format of dates (NOW IN BACKEND)
                 dates = document.getElementsByName("date")
                 for (let i=0; i<dates.length; i++){
                     let date = new Date(dates[i].innerText)
                     dates[i].innerText = date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });   
-                }
+                }*/
             </script>
 
             <table>
                 <thead>
-                    <input autofocus name="q" placeholder="Select team" type="text">
+                    <input name="q" placeholder="Select team" type="text">
                     <tr>
                         <th>Qualified teams</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>
-                            Argentina
-                        </td>
-                    </tr>
+
                 </tbody>
             </table>
         </main>

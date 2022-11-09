@@ -1,7 +1,8 @@
 import os
 
-from flask import Flask, flash, redirect, render_template, request
+from flask import Flask, flash, redirect, render_template, request, session
 from cs50 import SQL
+from datetime import datetime
 
 from helpers import Team, create_teams, simulate_match, simulate_group_stage
 
@@ -29,16 +30,28 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def index():
+
+    TEAMS = create_teams()
+    scores = simulate_group_stage(TEAMS).to_dict()
     # Organize teams and fixtures by groups
     group_teams = dict()
     group_fixtures = dict()
     for g in GROUPS:
         teams = db.execute('SELECT code FROM teams WHERE "group"=?', g)
         group_teams[g] = [team['code'] for team in teams]
-        fixtures = db.execute('SELECT * FROM fixtures WHERE team1 IN (SELECT code FROM teams WHERE "group"=?) ORDER BY date;', g)
-        group_fixtures[g] = [(match['date'], match['team1'], match['team2']) for match in fixtures]
 
+        fixtures = db.execute('SELECT * FROM fixtures WHERE team1 IN (SELECT code FROM teams WHERE "group"=?) ORDER BY date;', g)
+        # Change date formant e.g. 2022-12-02 into "Dec 02"
+        group_fixtures[g] = [{'date': datetime.strptime(match['date'], "%Y-%m-%d").strftime("%b %d"),
+                             'id':match['match'], 't1': match['team1'], 't2' :match['team2']} for match in fixtures]
+    
+    if request.method == 'GET':
+        simulate = request.args.get("match_id")
+        score = simulate_match()
+
+    else:
+        simulate = None
             
-    return render_template("/home.html", groups=GROUPS, teams=group_teams, fixtures=group_fixtures, names=TEAM_CODES)
+    return render_template("/home.html", groups=GROUPS, zip=zip, teams=group_teams, fixtures=group_fixtures, names=TEAM_CODES, simulate=simulate, score=score)

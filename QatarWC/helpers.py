@@ -57,7 +57,7 @@ def simulate_match():
     # Return score
     return t1_goals, total_goals - t1_goals
 
-def simulate_group_stage():
+def simulate_group_stage(TEAMS):
     """"
     Simulates all the group stage matches according to FIFA rules.
     https://digitalhub.fifa.com/m/2744a0a5e3ded185/original/FIFA-World-Cup-Qatar-2022-Regulations_EN.pdf
@@ -79,5 +79,5 @@ def simulate_group_stage():
     groups_df.insert(2, 't1_goals', t1_goals)
     groups_df.insert(3, 't2_goals', t2_goals)
 
-    print(groups_df)
+    return(groups_df)
 
