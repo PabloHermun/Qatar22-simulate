@@ -21,8 +21,9 @@
             <h3>
                 Simulate scenarios for a given team in the upcoming world cup!
             </h3>
-            <h2>Calendar Qatar 2022</h2>
-            <p>Simulate individual matches, groups, stages...</p>
+            <h2>Calendar Qatar 2022 </h2>
+            <p> Simulate individual matches, groups, stages... </p>
+            <p> Try simulating the group stage and if you don't like some of the scores simulate those mathces again. </p>
             <form method="post" action="/">
                 <button class="btn btn-outline-success btn-sm" value="" title="Simulate all matches">Simulate groups stage</button>
             </form>
@@ -57,12 +58,12 @@
                                 {% for match in fg -%}
                                 <tr>
                                     <td class="text-nowrap">{{match.date}}</td>
-                                    <td>{{match.t1}}</td>
-                                    <td> vs </td>
-                                    <td>{{match.t2}}</td>
+                                    <td colspan="2">{{match.t1}} &nbsp; vs &nbsp; {{match.t2}}</td>
                                     {% if match.id|int == simulate|int %}
-                                    <td>{{ score.0 }} : {{ score.1 }}</td>
+                                        <td>{{ score.0 }} : {{ score.1 }}</td>
                                     {% else %}
+                                        <td>{{match.t1_goals}} : {{match.t2_goals}}</td>
+                                    {% endif %}
                                     <td class="py-1">
                                         <div class="btn-container">
                                         <form method="get" action="/">
@@ -71,7 +72,6 @@
                                         </form>
                                         </div>
                                     </td>
-                                    {% endif %}
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -96,7 +96,7 @@
                                                          src="https://cloudinary.fifa.com/api/v3/picture/flags-sq-2/{{team}}?tx=c_fill,g_auto,q_auto" class="image_img__3ckHZ group_imageSize__11-Uy"></td>
                                     {% endfor %}
                                     <td> 
-                                        <form method="get" action="/group">
+                                        <form method="post" action="/group">
                                             <button class="btn btn-outline-success btn-sm" name="group" value="" title="Simulate group">Simulate</button>
                                         </form>
                                     </td>
@@ -107,9 +107,12 @@
                                 {% for match in fg -%}
                                 <tr>
                                     <td class="text-nowrap">{{match.date}}</td>
-                                    <td>{{match.t1}}</td>
-                                    <td> vs </td>
-                                    <td>{{match.t2}}</td>
+                                    <td colspan="2">{{match.t1}} &nbsp; vs &nbsp; {{match.t2}}</td>
+                                    {% if score == none %}
+                                        <td>{{match.t1_goals}} : {{match.t2_goals}}</td>
+                                    {% else %}
+                                        <td> : </td>
+                                    {% endif %}
                                     <td class="py-1">
                                         <div class="btn-container">
                                         <form method="post" action="/">

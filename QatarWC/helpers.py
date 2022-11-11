@@ -46,13 +46,13 @@ def simulate_match():
     """
     # Custom probability distribution of total match goals
     xk = range(13)
-    pk = (0.09, 0.18, 0.28, 0.24, 0.08, 0.065, 0.026, 0.015, 0.010, 0.006, 0.0035, 0.0025, 0.002)
+    pk = (0.09, 0.18, 0.28, 0.24, 0.09, 0.065, 0.025, 0.015, 0.0065, 0.004, 0.002, 0.0015, 0.001)
     pdist = rv_discrete(values=(xk, pk))
 
     # Generate sample
     total_goals = pdist.rvs() 
     # Assign a portion of goals to one team (max 10)
-    t1_goals = randint(0,10) if total_goals>10 else randint(0, total_goals)
+    t1_goals = randint(total_goals%10,10) if total_goals>10 else randint(0, total_goals)
 
     # Return score
     return t1_goals, total_goals - t1_goals

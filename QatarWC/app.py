@@ -34,7 +34,7 @@ def after_request(response):
 def index():
 
     TEAMS = create_teams()
-    scores = simulate_group_stage(TEAMS).to_dict()
+    scores = simulate_group_stage(TEAMS).to_dict('index')
     # Organize teams and fixtures by groups
     group_teams = dict()
     group_fixtures = dict()
@@ -45,7 +45,9 @@ def index():
         fixtures = db.execute('SELECT * FROM fixtures WHERE team1 IN (SELECT code FROM teams WHERE "group"=?) ORDER BY date;', g)
         # Change date formant e.g. 2022-12-02 into "Dec 02"
         group_fixtures[g] = [{'date': datetime.strptime(match['date'], "%Y-%m-%d").strftime("%b %d"),
-                             'id':match['match'], 't1': match['team1'], 't2' :match['team2']} for match in fixtures]
+                             'id':match['match'], 't1': match['team1'], 't2' :match['team2'], 
+                             't1_goals': scores[match['match']]['t1_goals'],
+                             't2_goals': scores[match['match']]['t2_goals']} for match in fixtures]
     
     if request.method == 'GET':
         simulate = request.args.get("match_id")
@@ -53,5 +55,6 @@ def index():
 
     else:
         simulate = None
+        score = None
             
     return render_template("/home.html", groups=GROUPS, zip=zip, teams=group_teams, fixtures=group_fixtures, names=TEAM_CODES, simulate=simulate, score=score)
