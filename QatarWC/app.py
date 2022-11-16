@@ -4,7 +4,7 @@ from flask import Flask, flash, redirect, render_template, request, session
 from cs50 import SQL
 from datetime import datetime
 
-from helpers import Team, create_teams, simulate_match, simulate_group_stage
+from helpers import Team, create_teams, simulate_score, simulate_group_stage, get_group_rank
 
 # Configure application
 app = Flask(__name__)
@@ -34,27 +34,35 @@ def after_request(response):
 def index():
 
     TEAMS = create_teams()
-    scores = simulate_group_stage(TEAMS).to_dict('index')
     # Organize teams and fixtures by groups
     group_teams = dict()
     group_fixtures = dict()
     for g in GROUPS:
         teams = db.execute('SELECT code FROM teams WHERE "group"=?', g)
         group_teams[g] = [team['code'] for team in teams]
-
         fixtures = db.execute('SELECT * FROM fixtures WHERE team1 IN (SELECT code FROM teams WHERE "group"=?) ORDER BY date;', g)
         # Change date formant e.g. 2022-12-02 into "Dec 02"
         group_fixtures[g] = [{'date': datetime.strptime(match['date'], "%Y-%m-%d").strftime("%b %d"),
                              'id':match['match'], 't1': match['team1'], 't2' :match['team2'], 
-                             't1_goals': scores[match['match']]['t1_goals'],
-                             't2_goals': scores[match['match']]['t2_goals']} for match in fixtures]
+                             't1_goals': '',
+                             't2_goals': ''} for match in fixtures]
     
     if request.method == 'GET':
-        simulate = request.args.get("match_id")
-        score = simulate_match()
+        
+        g_sim = 0
 
     else:
-        simulate = None
-        score = None
+        # Simulate groups-stage
+        scores = simulate_group_stage(TEAMS).to_dict('index')
+        g_sim = dict()
+        for g in GROUPS:
+            fixtures = db.execute('SELECT * FROM fixtures WHERE team1 IN (SELECT code FROM teams WHERE "group"=?) ORDER BY date;', g)
+            for i, match in enumerate(fixtures):
+                group_fixtures[g][i]['t1_goals'] = scores[match['match']]['t1_goals']
+                group_fixtures[g][i]['t2_goals'] = scores[match['match']]['t2_goals']
+
+            g_sim[g] = get_group_rank(g, group_teams[g], TEAMS, group_fixtures[g])
             
-    return render_template("/home.html", groups=GROUPS, zip=zip, teams=group_teams, fixtures=group_fixtures, names=TEAM_CODES, simulate=simulate, score=score)
+    return render_template("/home.html", tst=TEAMS, groups=GROUPS, zip=zip, 
+                            teams=group_teams, fixtures=group_fixtures, 
+                            names=TEAM_CODES, simulate=g_sim)

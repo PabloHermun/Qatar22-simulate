@@ -47,14 +47,14 @@ match,date,team1,team2,stage
 46,2022-12-02,KOR,POR,group matches
 47,2022-12-02,SRB,SUI,group matches
 48,2022-12-02,CMR,BRA,group matches
-49,2022-12-03,1A,2B,round 16
-50,2022-12-03,1C,2D,round 16
-51,2022-12-04,1B,2A,round 16
-52,2022-12-04,1D,2C,round 16
-53,2022-12-05,1E,2F,round 16
-54,2022-12-05,1G,2H,round 16
-55,2022-12-06,1F,2E,round 16
-56,2022-12-06,1H,2G,round 16
+49,2022-12-03,A1,B2,round 16
+50,2022-12-03,C1,D2,round 16
+51,2022-12-04,B1,A2,round 16
+52,2022-12-04,D1,C2,round 16
+53,2022-12-05,E1,F2,round 16
+54,2022-12-05,G1,H2,round 16
+55,2022-12-06,F1,E2,round 16
+56,2022-12-06,H1,G2,round 16
 57,2022-12-09,W49,W50,quarter-finals
 58,2022-12-09,W53,W54,quarter-finals
 59,2022-12-10,W51,W52,quarter-finals

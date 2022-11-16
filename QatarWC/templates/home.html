@@ -25,8 +25,9 @@
             <p> Simulate individual matches, groups, stages... </p>
             <p> Try simulating the group stage and if you don't like some of the scores simulate those mathces again. </p>
             <form method="post" action="/">
-                <button class="btn btn-outline-success btn-sm" value="" title="Simulate all matches">Simulate groups stage</button>
+                <button class="btn btn-outline-success btn-sm" value="" title="Simulate all matches">Simulate group-stage</button>
             </form>
+            <p> Teams in the same row and with the same color will face each other in the round of 16. </p>
         </header>
         <main>
             <div class="container mx-1 text-center" style="max-width:1500px">
@@ -37,7 +38,7 @@
                             <caption class="text-center">
                                 Group {{ label }}
                             </caption>
-                            <thead>
+                            <thead class="border-dark">
                                 <tr>
                                     {% set tg = teams[label] %}
                                     {% for team in tg -%}
@@ -47,9 +48,11 @@
                                     </td>
                                     {% endfor %}
                                     <td> 
+                                        <!--
                                         <form method="get" action="/group">
                                             <button class="btn btn-outline-success btn-sm" name="group" value="" title="Simulate group">Simulate</button>
                                         </form>
+                                        -->
                                     </td>
                                 </tr>
                             </thead>
@@ -59,11 +62,7 @@
                                 <tr>
                                     <td class="text-nowrap">{{match.date}}</td>
                                     <td colspan="2">{{match.t1}} &nbsp; vs &nbsp; {{match.t2}}</td>
-                                    {% if match.id|int == simulate|int %}
-                                        <td>{{ score.0 }} : {{ score.1 }}</td>
-                                    {% else %}
-                                        <td>{{match.t1_goals}} : {{match.t2_goals}}</td>
-                                    {% endif %}
+                                    <td>{{match.t1_goals}} : {{match.t2_goals}}</td>
                                     <td class="py-1">
                                         <div class="btn-container">
                                         <form method="get" action="/">
@@ -77,29 +76,101 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="col">
-
+                    <div class="col d-flex align-items-center mt-5">
+                        <table class="table w-auto mt-5">
+                            <thead class="table-dark">
+                                <td>
+                                    {% if simulate != 0 %}
+                                    {% if simulate[label][1] == 'd-f' %}
+                                    *
+                                    {% elif simulate[label][1] == 'g-h' %}
+                                    **
+                                    {% endif %}
+                                    {% endif %}
+                                </td>
+                                <td scope="col">Team</td>
+                                <td scope="col">Pts.</td>
+                                <td scope="col">GDf.</td>
+                                <td scope="col">GS</td>
+                            </thead>
+                            {% if simulate != 0 %}
+                            <tbody>
+                                {% set rg = simulate[label][0] %}
+                                {% for rank, team in rg.items()%}
+                                <tr {% if loop.index == 1 %} 
+                                class="table-success"
+                                {% elif loop.index == 2%}
+                                class="table-warning"
+                                {% endif %}>
+                                    <td>
+                                        {{label}}{{loop.index}}
+                                    </td>
+                                    <td><img title="{{names[team]}}" decoding="async" loading="lazy" height="50%" width="auto" 
+                                        src="https://cloudinary.fifa.com/api/v3/picture/flags-sq-2/{{team}}?tx=c_fill,g_auto,q_auto" class="image_img__3ckHZ group_imageSize__11-Uy">
+                                    </td>
+                                    <td>{{tst[team].points}}</td>
+                                    <td>{{tst[team].goals_scored - tst[team].goals_received}}</td>
+                                    <td>{{tst[team].goals_scored}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            {% endif %}
+                        </table>
                     </div>
-                    <div class="col">
-
+                    <div class="col d-flex align-items-center flex-row-reverse mt-5">
+                        <table class="table w-auto mt-5">
+                            <thead class="table-dark">
+                                <td>
+                                    {% if simulate != 0 %}
+                                    {% if simulate[labelp1][1] == 'd-f' %}
+                                    *
+                                    {% elif simulate[labelp1][1] == 'g-h' %}
+                                    **
+                                    {% endif %}
+                                    {% endif %}
+                                </td>
+                                <td scope="col">Team</td>
+                                <td scope="col">Pts.</td>
+                                <td scope="col">GDf.</td>
+                                <td scope="col">GS</td>
+                            </thead>
+                            {% if simulate != 0 %}
+                            <tbody>
+                                {% set rg = simulate[labelp1][0] %}
+                                {% for rank, team in rg.items()%}
+                                <tr {% if loop.index == 1 %} 
+                                    class="table-warning"
+                                    {% elif loop.index == 2%}
+                                    class="table-success"
+                                    {% endif %}>
+                                    <td>
+                                        {{labelp1}}{{loop.index}}
+                                    </td>
+                                    <td><img title="{{names[team]}}" decoding="async" loading="lazy" height="50%" width="auto" 
+                                        src="https://cloudinary.fifa.com/api/v3/picture/flags-sq-2/{{team}}?tx=c_fill,g_auto,q_auto" class="image_img__3ckHZ group_imageSize__11-Uy">
+                                    </td>
+                                    <td>{{tst[team].points}}</td>
+                                    <td>{{tst[team].goals_scored - tst[team].goals_received}}</td>
+                                    <td>{{tst[team].goals_scored}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            {% endif %}
+                        </table>
                     </div>
                     <div class="col">
                         <table class="table table-hover caption-top">
                             <caption class="text-center">
                                 Group {{ labelp1 }}
                             </caption>
-                            <thead>
+                            <thead class="border-dark">
                                 <tr>
                                     {% set tg = teams[labelp1] %}
                                     {% for team in tg -%}
                                     <td> {{ team }} <img title="{{names[team]}}" decoding="async" loading="lazy" height="70%" width="auto" 
                                                          src="https://cloudinary.fifa.com/api/v3/picture/flags-sq-2/{{team}}?tx=c_fill,g_auto,q_auto" class="image_img__3ckHZ group_imageSize__11-Uy"></td>
                                     {% endfor %}
-                                    <td> 
-                                        <form method="post" action="/group">
-                                            <button class="btn btn-outline-success btn-sm" name="group" value="" title="Simulate group">Simulate</button>
-                                        </form>
-                                    </td>
+                                    <td></td>
                                 </tr>
                             </thead>
                             <tbody style="font-size: 15px">
@@ -108,11 +179,7 @@
                                 <tr>
                                     <td class="text-nowrap">{{match.date}}</td>
                                     <td colspan="2">{{match.t1}} &nbsp; vs &nbsp; {{match.t2}}</td>
-                                    {% if score == none %}
-                                        <td>{{match.t1_goals}} : {{match.t2_goals}}</td>
-                                    {% else %}
-                                        <td> : </td>
-                                    {% endif %}
+                                    <td>{{match.t1_goals}} : {{match.t2_goals}}</td>
                                     <td class="py-1">
                                         <div class="btn-container">
                                         <form method="post" action="/">
@@ -138,18 +205,79 @@
                     dates[i].innerText = date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });   
                 }*/
             </script>
-
-            <table>
-                <thead>
-                    <input name="q" placeholder="Select team" type="text">
-                    <tr>
-                        <th>Qualified teams</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
+            <div class="text-center">
+                <p>* : Qualification defined by the results of matches between tied teams.</p>
+                <p>** : Qualification defined by disciplinary performance or by a draw.</p>
+            </div>
+            <div class="container mx-1 text-center" style="max-width:1500px">
+                <div class="row">
+                    <div class="col">
+                        R16
+                    </div>
+                    <div class="col">
+                        QF
+                    </div>
+                    <div class="col">
+                        SF
+                    </div>
+                    <div class="col">
+                        FINAL
+                    </div>
+                    <div class="col">
+                        SF
+                    </div>
+                    <div class="col">
+                        QF
+                    </div>
+                    <div class="col">
+                        R16
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <div class="col">
+                        1A vs 2B
+                    </div>
+                    <div class="col"></div>
+                    <div class="col"></div>
+                    <div class="col"></div>
+                    <div class="col">
+                        1B vs 2A
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <div class="col">
+                        1C vs 2D
+                    </div>
+                    <div class="col"></div>
+                    <div class="col"></div>
+                    <div class="col"></div>
+                    <div class="col">
+                        1D vs 2C
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <div class="col">
+                        1E vs 2F
+                    </div>
+                    <div class="col"></div>
+                    <div class="col"></div>
+                    <div class="col"></div>
+                    <div class="col">
+                        1F vs 2E
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <div class="col">
+                        1G vs 2H
+                    </div>
+                    <div class="col"></div>
+                    <div class="col"></div>
+                    <div class="col"></div>
+                    <div class="col">
+                        1H vs 2G
+                    </div>
+                </div>
+            </div>
         </main>
     </body>
 </html>

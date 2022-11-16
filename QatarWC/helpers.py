@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 from cs50 import SQL
-from random import randint
 from scipy.stats import rv_discrete
 
 db = SQL("sqlite:///qatarwc.db")
@@ -20,11 +19,8 @@ class Team:
     def match(self, scored, received):
         self.goals_scored += scored
         self.goals_received += received
-        # Update points depending on result
-        if scored > received:
-            self.points += 3
-        elif scored == received:
-            self.points += 1
+        # Update points depending on score
+        self.points += score2pts(scored, received)
 
     def eliminate(self):
         self.stage = 'eliminated'
@@ -38,7 +34,16 @@ def create_teams():
         TEAMS[team['code']] = Team(team['code'], team['group'])
     return TEAMS
 
-def simulate_match():
+def score2pts(scored, received):
+    """Given a score, returns the number of poins for one team."""
+    if scored > received:
+            return 3
+    elif scored == received:
+            return 1
+    else:
+        return 0
+
+def simulate_score():
     """
     Returns the final score of a simulated football match. 
     The max goals ever scored in a WC match are 12.
@@ -52,7 +57,7 @@ def simulate_match():
     # Generate sample
     total_goals = pdist.rvs() 
     # Assign a portion of goals to one team (max 10)
-    t1_goals = randint(total_goals%10,10) if total_goals>10 else randint(0, total_goals)
+    t1_goals = np.random.randint(total_goals%10,11) if total_goals>10 else np.random.randint(0, total_goals + 1)
 
     # Return score
     return t1_goals, total_goals - t1_goals
@@ -68,7 +73,7 @@ def simulate_group_stage(TEAMS):
     t1_goals=[]
     t2_goals=[]
     for _, row in groups_df.iterrows():
-        g1, g2 = simulate_match()
+        g1, g2 = simulate_score()
         # Store score
         t1_goals.append(g1)
         t2_goals.append(g2)
@@ -81,3 +86,75 @@ def simulate_group_stage(TEAMS):
 
     return(groups_df)
 
+def get_group_rank(label, team_names, TEAMS, fixtures):
+    """
+    Obtains the ranking of a given group according to FIFA rules:
+    https://digitalhub.fifa.com/m/2744a0a5e3ded185/original/FIFA-World-Cup-Qatar-2022-Regulations_EN.pdf
+    Return a dict of position:team and the criteria used for tie-break (if necessary)
+    """
+    
+    # Create a list of relevant group stats
+    group_stats = list()
+    for team in team_names:
+        t = TEAMS[team]
+        group_stats.append([t.name, t.points, t.goals_scored - t.goals_received, t.goals_scored])
+        
+    # Order teams by pts, gdf and gs (CRITERIA (a)-(c))
+    group_df = pd.DataFrame(group_stats, columns=['team','pts','gdf', 'gs']).sort_values(['pts','gdf','gs'], ascending=[False, False, False])
+    group_df.index = [1,2,3,4]
+    #print(group_df)
+    
+    # Check if two or more teams (out of the first 3) are still tied
+    dups = group_df.duplicated(subset=['pts','gdf','gs'], keep=False)
+    is_tied = dups[0:3].sum()
+    if is_tied <= 1:
+        # No ties
+        return group_df[['team']].to_dict()['team'], 'a-c'
+    
+    # Consider matches among tied teams
+    tied_teams = group_df[dups]['team'].to_list()
+    tiebreak = dict() # Stores pts, gdf and gs only from those mathces (CRITERIA (d)-(f))
+    
+    if group_df[dups].drop_duplicates(subset=['pts','gdf','gs']).shape[0] != 1:
+    # If there are two pairs of tied teams (1&2 and 3&4) we only care about 1&2
+        tied_teams = tied_teams[:2]
+        
+    for match in fixtures:
+        # Select matches of interest
+        if match['t1'] in tied_teams and match['t2'] in tied_teams:
+            # Store stats
+            g1, g2 = match['t1_goals'], match['t2_goals']
+            if match['t1'] not in tiebreak:
+                tiebreak[match['t1']] = np.asarray([score2pts(g1, g2), g1-g2, g1])
+            else:
+                tiebreak[match['t1']] += np.asarray([score2pts(g1, g2), g1-g2, g1])
+
+            if match['t2'] not in tiebreak:
+                tiebreak[match['t2']] = np.asarray([score2pts(g2, g1), g2-g1, g2])
+            else:
+                tiebreak[match['t2']] += np.asarray([score2pts(g2, g1), g2-g1, g2])
+            #print(match)
+            
+    # Order tied teams 
+    tbreak = pd.DataFrame.from_dict(tiebreak, orient='index', columns=['pts','gdf', 'gs']).sort_values(['pts','gdf','gs'], ascending=[False, False, False])
+    #print(tbreak)
+    
+    # Rebuilt table of positions after tie-break
+    positions=dict()
+    j=0
+    for i in range(1,5):
+        if dups[i] == True:
+            positions[i] = tbreak.index[j]
+            j += 1
+        else:
+            positions[i] = group_df.iloc[i-1]['team']
+    
+    # If there are still ties the remaining criteria are not handled here (CRITERIA (g) & (h)))
+    dups = tbreak.duplicated(subset=['pts','gdf','gs'], keep=False)
+    is_tied = dups.sum()
+    
+    if is_tied <= 0:
+        return positions, 'd-f'
+
+    else:
+        return positions, 'g-h'
