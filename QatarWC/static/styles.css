@@ -1,9 +1,13 @@
+body {
+  background-color: rgb(238, 238, 228);
+}
+
 /* Match-button only visible on hover*/
 .btn-container {
     opacity: 0;
     transition: opacity 0.3s linear;
   }
-tr:hover .btn-container { 
+table:hover .btn-container { 
     opacity: 1;
   }
 
@@ -51,4 +55,8 @@ tr:hover .btn-container {
 .tooltip:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
+}
+
+#id {
+
 }

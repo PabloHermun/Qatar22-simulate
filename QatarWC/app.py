@@ -30,7 +30,7 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET"])
 def index():
 
     TEAMS = create_teams()
@@ -46,12 +46,8 @@ def index():
                              'id':match['match'], 't1': match['team1'], 't2' :match['team2'], 
                              't1_goals': '',
                              't2_goals': ''} for match in fixtures]
-    
-    if request.method == 'GET':
-        
-        g_sim = 0
 
-    else:
+    if request.args.get('simulate') == '1':
         # Simulate groups-stage
         scores = simulate_group_stage(TEAMS).to_dict('index')
         g_sim = dict()
@@ -62,6 +58,9 @@ def index():
                 group_fixtures[g][i]['t2_goals'] = scores[match['match']]['t2_goals']
 
             g_sim[g] = get_group_rank(g, group_teams[g], TEAMS, group_fixtures[g])
+
+    else:
+        g_sim = 0
             
     return render_template("/home.html", tst=TEAMS, groups=GROUPS, zip=zip, 
                             teams=group_teams, fixtures=group_fixtures, 
