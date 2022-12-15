@@ -1,6 +1,6 @@
 
 document.addEventListener("DOMContentLoaded", function(){
-    // Display round of 16 contender flags
+    // Display round of 16 contender flags 
     let round = document.getElementsByName('R16')
     for (let game of round) {
         // From html get the {group|position} labels for each game
@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 
 function sim_r16(stage) {
+    // Simulate the round of 16
     // Iterate over html rows
     let rows = document.getElementsByName('bracket-row');
     for (let j = 0; j < rows.length; j++) {
@@ -34,7 +35,7 @@ function sim_r16(stage) {
             }
             catch(err) {
             }
-
+            // Winner passes to QF
             qf_lists[i].querySelector('td').innerHTML = row.querySelectorAll('#t'+ winner)[i].innerHTML
             
         }
@@ -42,9 +43,11 @@ function sim_r16(stage) {
 }
 
 function sim_qf(first, last) {
-
+    // Simulates all the KO-games in the range [first, last]
     for (let g = first; g < last +1; g++) {
+        
         let teams = document.querySelectorAll('#g'+g)
+        // Simulate a winner
         let winner = rand_winner();
         
         try {
@@ -52,13 +55,16 @@ function sim_qf(first, last) {
             let looser = teams[(winner+1)%2].querySelector('img')
             looser.classList.remove('opacity-100')
             looser.classList.add('opacity-25')
-            // Select winner
+
+            // Select winner (change opacity if it is currently a looser)
             teams[winner].querySelector('img').classList.remove('opacity-25')
 
+            // 3rd place contenders (special case)
             document.querySelector('#L'+g).innerHTML = teams[(winner+1)%2].querySelector('td').innerHTML
         }
         catch(err) {
         }
+        // Winner passes
         document.querySelector('#W'+g).innerHTML = teams[winner].querySelector('td').innerHTML
     }
     // Edit size of finalists
@@ -66,14 +72,14 @@ function sim_qf(first, last) {
     final.innerHTML = final.innerHTML.replaceAll("sq-3","sq-4")
     champion = document.getElementById('champion')
     champion.innerHTML = champion.innerHTML.replaceAll("sq-3","sq-4").replace("45%","60%")
+    third = document.getElementById('3rd')
+    third.innerHTML = third.innerHTML.replaceAll("sq-3","sq-4").replace("45%","35%")
     try{
+        // Decorate champion if there is one
         champion.querySelector('img').style.border = "5px solid #FFD700"
         champion.querySelector('img').classList.add('img-thumbnail')
     }
     catch (err){}
-
-    third = document.getElementById('3rd')
-    third.innerHTML = third.innerHTML.replaceAll("sq-3","sq-4").replace("45%","35%")
 }
 
 function rand_winner() {

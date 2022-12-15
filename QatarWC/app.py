@@ -18,7 +18,7 @@ db = SQL("sqlite:///qatarwc.db")
 # Load the labels of all groups
 group_labels = db.execute('SELECT DISTINCT "group" FROM teams') # Returns a list of dicts
 GROUPS = [list(d.values())[0] for d in group_labels]
-# Load code: team dict 
+# Make a dict with [codes: team] values
 TEAM_CODES = db.execute('SELECT code, team FROM teams;')
 TEAM_CODES = {team['code']:team['team'] for team in TEAM_CODES}
 
@@ -46,7 +46,8 @@ def index():
                              'id':match['match'], 't1': match['team1'], 't2' :match['team2'], 
                              't1_goals': '',
                              't2_goals': ''} for match in fixtures]
-
+    
+    # If the route is requested through the simulate button
     if request.args.get('simulate') == '1':
         # Simulate groups-stage
         scores = simulate_group_stage(TEAMS).to_dict('index')

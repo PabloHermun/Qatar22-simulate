@@ -3,6 +3,7 @@ import pandas as pd
 from cs50 import SQL
 from scipy.stats import rv_discrete
 
+# Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///qatarwc.db")
 
 
@@ -14,7 +15,6 @@ class Team:
         self.points = 0
         self.goals_scored = 0
         self.goals_received = 0
-        self.stage = "groups"
 
     def match(self, scored, received):
         self.goals_scored += scored
@@ -22,8 +22,6 @@ class Team:
         # Update points depending on score
         self.points += score2pts(scored, received)
 
-    def eliminate(self):
-        self.stage = 'eliminated'
 
 
 def create_teams(): 
@@ -35,7 +33,7 @@ def create_teams():
     return TEAMS
 
 def score2pts(scored, received):
-    """Given a score, returns the number of poins for one team."""
+    """Given a score, returns the number of points for one team."""
     if scored > received:
             return 3
     elif scored == received:
@@ -64,8 +62,7 @@ def simulate_score():
 
 def simulate_group_stage(TEAMS):
     """"
-    Simulates all the group stage matches according to FIFA rules.
-    https://digitalhub.fifa.com/m/2744a0a5e3ded185/original/FIFA-World-Cup-Qatar-2022-Regulations_EN.pdf
+    Simulates all the group stage matches
     """
     group_matches = db.execute("SELECT match, team1, team2 FROM fixtures WHERE stage = 'group matches';")
     groups_df = pd.DataFrame(group_matches).set_index('match')
@@ -90,7 +87,7 @@ def get_group_rank(label, team_names, TEAMS, fixtures):
     """
     Obtains the ranking of a given group according to FIFA rules:
     https://digitalhub.fifa.com/m/2744a0a5e3ded185/original/FIFA-World-Cup-Qatar-2022-Regulations_EN.pdf
-    Return a dict of position:team and the criteria used for tie-break (if necessary)
+    Return a dict of [position: team] values and the criteria used for tie-break (if necessary)
     """
     
     # Create a list of relevant group stats
@@ -116,7 +113,7 @@ def get_group_rank(label, team_names, TEAMS, fixtures):
     tiebreak = dict() # Stores pts, gdf and gs only from those mathces (CRITERIA (d)-(f))
     
     if group_df[dups].drop_duplicates(subset=['pts','gdf','gs']).shape[0] != 1:
-    # If there are two pairs of tied teams (1&2 and 3&4) we only care about 1&2
+    # If there are two pairs of tied teams (i.e. 1&2 and 3&4) we only care about 1&2
         tied_teams = tied_teams[:2]
         
     for match in fixtures:
