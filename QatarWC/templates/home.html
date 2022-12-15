@@ -17,7 +17,7 @@
         </title>
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #7F1431;">
+        <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container-fluid">
                 <a class="navbar-brand home" href="/">
                     <h2>
@@ -36,9 +36,11 @@
         <header id="start" class="jumbotron text-center my-3">
             <h2>Group stage</h2>
             <p> Simulate all the scores of the group stage.</p>
+            
             <form method="get" action="/">
                 <button name="simulate" class="btn btn-outline-danger" value="1" title="Simulate all matches">Simulate group-stage</button>
             </form>
+            <span class="text-muted mb-0"><small> Simulation will be reset if the page is refreshed</small></span>
         </header>
         <main>
 <!--------- Group stage ------------->
@@ -219,7 +221,7 @@
                 <hr>
                 <div class="jumbotron text-center my-3">
                     <h2>Knock-out stages</h2>
-                    <p> Simulate each stage or all stages simultaneously.</p>
+                    <p> Simulate each stage or <span class="text-danger">all</span> stages simultaneously.</p>
                 </div>
                 <div class="col">
                     <form onsubmit="sim_r16('QF'); return false;">
@@ -494,5 +496,8 @@
                 </div>
             </div>
         </main>
+        <footer class="text-center py-3">
+            <p>These simulations don't consider favoritism of any team. Every scenario is equally likely.</p>
+        </footer>
     </body>
 </html>
