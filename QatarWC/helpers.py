@@ -22,7 +22,14 @@ class Team:
         # Update points depending on score
         self.points += score2pts(scored, received)
 
-
+def score2pts(scored, received):
+    """Given a score, returns the number of points for one team."""
+    if scored > received:
+            return 3
+    elif scored == received:
+            return 1
+    else:
+        return 0
 
 def create_teams(): 
     """Loads teams from db into Team objects."""
@@ -32,14 +39,6 @@ def create_teams():
         TEAMS[team['code']] = Team(team['code'], team['group'])
     return TEAMS
 
-def score2pts(scored, received):
-    """Given a score, returns the number of points for one team."""
-    if scored > received:
-            return 3
-    elif scored == received:
-            return 1
-    else:
-        return 0
 
 def simulate_score():
     """
