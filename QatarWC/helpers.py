@@ -9,6 +9,7 @@ db = SQL("sqlite:///qatarwc.db")
 
 class Team:
     """Football team in World Cup"""
+
     def __init__(self, name):
         self.name = name
         self.points = 0
@@ -21,14 +22,16 @@ class Team:
         # Update points depending on score
         self.points += score2pts(scored, received)
 
+
 def score2pts(scored, received):
     """Given a score, returns the number of points for one team."""
     if scored > received:
-            return 3
+        return 3
     elif scored == received:
-            return 1
+        return 1
     else:
         return 0
+
 
 def create_teams(): 
     """Loads teams from db into Team objects."""
@@ -53,10 +56,11 @@ def simulate_score():
     # Generate sample of total goals
     total_goals = pdist.rvs() 
     # Assign a portion of goals to one team (max 10)
-    t1_goals = np.random.randint(total_goals%10,11) if total_goals>10 else np.random.randint(0, total_goals + 1)
+    t1_goals = np.random.randint(total_goals % 10, 11) if total_goals > 10 else np.random.randint(0, total_goals + 1)
 
     # Return score
     return t1_goals, total_goals - t1_goals
+
 
 def simulate_group_stage(TEAMS):
     """"
@@ -79,7 +83,8 @@ def simulate_group_stage(TEAMS):
     groups_df.insert(2, 't1_goals', t1_goals)
     groups_df.insert(3, 't2_goals', t2_goals)
 
-    return(groups_df)
+    return groups_df
+
 
 def get_group_rank(group_team_names, TEAMS, fixtures):
     """
@@ -95,12 +100,13 @@ def get_group_rank(group_team_names, TEAMS, fixtures):
         group_stats.append([t.name, t.points, t.goals_scored - t.goals_received, t.goals_scored])
         
     # Order teams by pts, gdf and gs (CRITERIA (a)-(c))
-    group_df = pd.DataFrame(group_stats, columns=['team','pts','gdf', 'gs']).sort_values(['pts','gdf','gs'], ascending=[False, False, False])
-    group_df.index = [1,2,3,4]
+    group_df = pd.DataFrame(group_stats, columns=['team', 'pts', 'gdf', 'gs']).sort_values(
+                ['pts', 'gdf', 'gs'], ascending=[False, False, False])
+    group_df.index = [1, 2, 3, 4]
     #print(group_df)
     
     # Check if two or more teams (out of the first 3) are still tied
-    dups = group_df.duplicated(subset=['pts','gdf','gs'], keep=False)
+    dups = group_df.duplicated(subset=['pts', 'gdf', 'gs'], keep=False)
     is_tied = dups[0:3].sum()
     if is_tied <= 1:
         # No ties
@@ -108,12 +114,12 @@ def get_group_rank(group_team_names, TEAMS, fixtures):
     
     # Focus only on tied teams
     tied_teams = group_df[dups]['team'].to_list()
-    if group_df[dups].drop_duplicates(subset=['pts','gdf','gs']).shape[0] != 1:
-    # (*) If there are two pairs of tied teams (i.e. 1&2 and 3&4) we only care about 1&2
+    if group_df[dups].drop_duplicates(subset=['pts', 'gdf', 'gs']).shape[0] != 1:
+        # (*) If there are two pairs of tied teams (i.e. 1&2 and 3&4) we only care about 1&2
         tied_teams = tied_teams[:2]
 
     # Consider matches among tied teams
-    tiebreak = dict() # Stores teams: pts, gdf and gs only from those mathces (CRITERIA (d)-(f))
+    tiebreak = dict()  # Stores teams: pts, gdf and gs only from those mathces (CRITERIA (d)-(f))
         
     for match in fixtures:
         # Select matches of interest
@@ -132,21 +138,22 @@ def get_group_rank(group_team_names, TEAMS, fixtures):
             #print(match)
             
     # Order tied teams 
-    tbreak = pd.DataFrame.from_dict(tiebreak, orient='index', columns=['pts','gdf', 'gs']).sort_values(['pts','gdf','gs'], ascending=[False, False, False])
+    tbreak = pd.DataFrame.from_dict(tiebreak, orient='index', columns=['pts', 'gdf', 'gs']).sort_values(
+                ['pts', 'gdf', 'gs'], ascending=[False, False, False])
     #print(tbreak)
     
     # Rebuilt table of positions after tie-break
-    positions=dict()
-    j=0
-    for i in range(1,5):
-        if dups[i] == True and j < tbreak.shape[0]: # Extra condition for two-ties case (*)
+    positions = dict()
+    j = 0
+    for i in range(1, 5):
+        if dups[i] == True and j < tbreak.shape[0]:  # Extra condition for two-ties case (*)
             positions[i] = tbreak.index[j]
             j += 1
         else:
             positions[i] = group_df.iloc[i-1]['team']
     
     # If there are still ties the remaining criteria are not handled here (CRITERIA (g) & (h)))
-    dups = tbreak.duplicated(subset=['pts','gdf','gs'], keep=False)
+    dups = tbreak.duplicated(subset=['pts', 'gdf', 'gs'], keep=False)
     is_tied = dups.sum()
     
     if is_tied <= 0:
