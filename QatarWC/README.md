@@ -9,7 +9,7 @@ The project contains the following files:
 
 * `qatarwc.db`: A SQL database file containing two tables:
   - The `teams` table containing the name of the teams qualified to the 2022 WC, their 3-letter code, and their assigned group.
-  - The `fixture` table containing the number of match, the date, the codes of the two teams playing and the correspondent stage of the tournament.
+  - The `fixture` table containing the number of match, the date, the codes of the two teams playing and the corresponding stage of the tournament.
 
   All the data in these tables was extracted from the csv files contained in the `static/data` folder using SQLite 3. 
   Those csv files were first obtained from [Kaggle](https://www.kaggle.com/datasets/amineteffal/qatar2022worldcupschudule?resource=download) and then modified with the python scripts saved in the `static/data` folder. <br>
