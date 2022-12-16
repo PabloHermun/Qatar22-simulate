@@ -106,13 +106,14 @@ def get_group_rank(group_team_names, TEAMS, fixtures):
         # No ties
         return group_df[['team']].to_dict()['team'], 'a-c'
     
-    # Consider matches among tied teams
+    # Focus only on tied teams
     tied_teams = group_df[dups]['team'].to_list()
-    tiebreak = dict() # Stores pts, gdf and gs only from those mathces (CRITERIA (d)-(f))
-    
     if group_df[dups].drop_duplicates(subset=['pts','gdf','gs']).shape[0] != 1:
-    # If there are two pairs of tied teams (i.e. 1&2 and 3&4) we only care about 1&2
+    # (*) If there are two pairs of tied teams (i.e. 1&2 and 3&4) we only care about 1&2
         tied_teams = tied_teams[:2]
+
+    # Consider matches among tied teams
+    tiebreak = dict() # Stores teams: pts, gdf and gs only from those mathces (CRITERIA (d)-(f))
         
     for match in fixtures:
         # Select matches of interest
@@ -138,7 +139,7 @@ def get_group_rank(group_team_names, TEAMS, fixtures):
     positions=dict()
     j=0
     for i in range(1,5):
-        if dups[i] == True:
+        if dups[i] == True and j < tbreak.shape[0]: # Extra condition for two-ties case (*)
             positions[i] = tbreak.index[j]
             j += 1
         else:
