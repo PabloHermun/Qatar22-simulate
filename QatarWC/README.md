@@ -39,7 +39,7 @@ The project contains the following files:
   First, all the team-codes given as input are used to search the respective team-objects in TEAMS, from which the name, points, goal difference and goals scored are extracted.
   Hence a table of the group teams is organized into the `group_df` dataframe to then be sorted by the number of points, goal difference, and goals scored, in that preference order.
 
-  If no teams out of the first 3 (since only 1st and 2nd matter[<u>this could be upgraded<u>]) are tied on all the criteria, return group_df as it is.
+  If no teams out of the first 3 (since only 1st and 2nd matter [<u>this could be upgraded<u>]) are tied on all the criteria, return group_df as it is.
   If there are ties, a new rank (with the same columns) is computed just for the tied teams, but only considering the matches between them.
   This tie-break table is finally complemented with the original ranking and returned, together with a string reporting the criteria used to break the tie. The latter is used in the HTML to mark the group ranking with an asterisk if tie-breaks had to be computed.
 
