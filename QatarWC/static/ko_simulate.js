@@ -42,10 +42,10 @@ function sim_r16(stage) {
     }
 }
 
-function sim_qf(first, last) {
+function sim_ko_games(first, last) {
     // Simulates all the KO-games in the range [first, last]
     for (let g = first; g < last +1; g++) {
-        
+
         let teams = document.querySelectorAll('#g'+g)
         // Simulate a winner
         let winner = rand_winner();

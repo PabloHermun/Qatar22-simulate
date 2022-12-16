@@ -54,8 +54,18 @@ The project contains the following files:
   The second section consist of a grid where all the flags of the KO-stages' contenders will be display as they progress in the 'bracket' during the simulation. When the group-stage simulation is executed the qualified teams of each group are collocated in their corresponding spot of the round of 16. 
   There are several buttons that the user can use to simulate the KO-stages one by one or all at once.
   All the functionality of this section is implemented on the client-side with the `ko_simulate.js` file.
-  
-* `stles.css`
-* `ko_simulate.js`
 
-* `requirements.txt`: contains the names of the python libraries used.
+* `stles.css`: This stylesheet contains a few lines only to set the main colors of the website. Additionally a `.btn-container`style is defined for the group buttons that will be implemented in the future.
+
+* `ko_simulate.js`: JavaScript file containing four functions that build up the functionality of the KO-stages section of the site:
+
+  - The first anonymous function fills the R16 grid spots with the flags corresponding to the qualified teams playing each game, as long as the group-stage simulation has ben executed.
+  
+  - The `sim_r16` function implements the simulation of the round of 16. Using the `rand_winner` function, one of each pair of flags is selected as the winner of the corresponding match and used to populate the QF spots of the grid as the FIFA calendar dictates. The looser flag is also reduced in opacity.
+
+  - The `sim_ko_games` function implements the simulation of a range of games which are labeled with their corresponding number of game from the database using css selectors. Similarly to the `sim_r16` function, it randomly selects a winner of each match and populates the corresponding spots of the next round.
+  Finally it customizes the style of the finalists and champion for a better design.
+
+* `requirements.txt`: The flask requirements file contains the names of the python libraries used.
+
+THIS WAS CS50!
