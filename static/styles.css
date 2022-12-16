@@ -1,0 +1,17 @@
+body {
+  background-color: rgb(238, 238, 228);
+}
+
+/* Group-button only visible on hover*/
+.btn-container {
+    opacity: 0;
+    transition: opacity 0.3s linear;
+  }
+table:hover .btn-container { 
+    opacity: 1;
+  }
+
+nav, footer {
+  background-color: #7F1431;
+  color: rgb(238, 238, 228)
+}
