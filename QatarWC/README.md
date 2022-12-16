@@ -41,9 +41,20 @@ The project contains the following files:
 
   If no teams out of the first 3 (since only 1st and 2nd matter[<u>this could be upgraded<u>]) are tied on all the criteria, return group_df as it is.
   If there are ties, a new rank (with the same columns) is computed just for the tied teams, but only considering the matches between them.
-  This tie-break table is finally complemented with the original ranking and returned.
+  This tie-break table is finally complemented with the original ranking and returned, together with a string reporting the criteria used to break the tie. The latter is used in the HTML to mark the group ranking with an asterisk if tie-breaks had to be computed.
 
-* `home.html`
+* `home.html`: The client side consist of only this one HTML file.
+  In the `<head>` element of the file, you can see that some external API's are used. Bootstrap is used for the style of the page. A cloudinary api is used to load the flags of all countries remotely. And another api is used to get the typography for the Qatar title.
+
+  The page is divided into two sections, one for the group-stage simulation and another one for the KO-stages simulation. Both sections can be accessed from the navbar.
+
+  The first section displays the calendar of matches organized by groups, by iterating with Jinja code over the data provided by the server-side (see `app.py`).
+  There is only one interactive button in the section which makes a request for the simulation to take place (in the server) and then the page is reloaded and displays all the results and rankings returned from the simulation. Notice that there are a few lines of commented HTML code. These are intended to display one button for each group that would allow to simulate a single group at a time. This will be implemented in the future.
+
+  The second section consist of a grid where all the flags of the KO-stages' contenders will be display as they progress in the 'bracket' during the simulation. When the group-stage simulation is executed the qualified teams of each group are collocated in their corresponding spot of the round of 16. 
+  There are several buttons that the user can use to simulate the KO-stages one by one or all at once.
+  All the functionality of this section is implemented on the client-side with the `ko_simulate.js` file.
+  
 * `stles.css`
 * `ko_simulate.js`
 
