@@ -1,10 +1,9 @@
-import os
 
-from flask import Flask, flash, redirect, render_template, request, session
+from flask import Flask, flash, render_template, request, session
 from cs50 import SQL
 from datetime import datetime
 
-from helpers import Team, create_teams, simulate_score, simulate_group_stage, get_group_rank
+from helpers import create_teams, simulate_group_stage, get_group_rank
 
 # Configure application
 app = Flask(__name__)
@@ -58,7 +57,7 @@ def index():
                 group_fixtures[g][i]['t1_goals'] = scores[match['match']]['t1_goals']
                 group_fixtures[g][i]['t2_goals'] = scores[match['match']]['t2_goals']
 
-            g_sim[g] = get_group_rank(g, group_teams[g], TEAMS, group_fixtures[g])
+            g_sim[g] = get_group_rank(group_teams[g], TEAMS, group_fixtures[g])
 
     else:
         g_sim = 0

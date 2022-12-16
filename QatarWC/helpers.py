@@ -9,9 +9,8 @@ db = SQL("sqlite:///qatarwc.db")
 
 class Team:
     """Football team in World Cup"""
-    def __init__(self, name, group):
+    def __init__(self, name):
         self.name = name
-        self.group = group
         self.points = 0
         self.goals_scored = 0
         self.goals_received = 0
@@ -36,7 +35,7 @@ def create_teams():
     # Dict of Team instances
     TEAMS = {}   
     for i, team in enumerate(db.execute('SELECT code, "group" FROM teams;')):
-        TEAMS[team['code']] = Team(team['code'], team['group'])
+        TEAMS[team['code']] = Team(team['code'])
     return TEAMS
 
 
@@ -51,7 +50,7 @@ def simulate_score():
     pk = (0.09, 0.18, 0.28, 0.24, 0.09, 0.065, 0.025, 0.015, 0.0065, 0.004, 0.002, 0.0015, 0.001)
     pdist = rv_discrete(values=(xk, pk))
 
-    # Generate sample
+    # Generate sample of total goals
     total_goals = pdist.rvs() 
     # Assign a portion of goals to one team (max 10)
     t1_goals = np.random.randint(total_goals%10,11) if total_goals>10 else np.random.randint(0, total_goals + 1)
@@ -66,8 +65,8 @@ def simulate_group_stage(TEAMS):
     group_matches = db.execute("SELECT match, team1, team2 FROM fixtures WHERE stage = 'group matches';")
     groups_df = pd.DataFrame(group_matches).set_index('match')
 
-    t1_goals=[]
-    t2_goals=[]
+    t1_goals = []
+    t2_goals = []
     for _, row in groups_df.iterrows():
         g1, g2 = simulate_score()
         # Store score
@@ -82,7 +81,7 @@ def simulate_group_stage(TEAMS):
 
     return(groups_df)
 
-def get_group_rank(label, team_names, TEAMS, fixtures):
+def get_group_rank(group_team_names, TEAMS, fixtures):
     """
     Obtains the ranking of a given group according to FIFA rules:
     https://digitalhub.fifa.com/m/2744a0a5e3ded185/original/FIFA-World-Cup-Qatar-2022-Regulations_EN.pdf
@@ -91,7 +90,7 @@ def get_group_rank(label, team_names, TEAMS, fixtures):
     
     # Create a list of relevant group stats
     group_stats = list()
-    for team in team_names:
+    for team in group_team_names:
         t = TEAMS[team]
         group_stats.append([t.name, t.points, t.goals_scored - t.goals_received, t.goals_scored])
         
