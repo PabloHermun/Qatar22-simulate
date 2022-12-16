@@ -1,6 +1,0 @@
-numpy
-pandas
-cs50
-scipy
-flask
-datetime
