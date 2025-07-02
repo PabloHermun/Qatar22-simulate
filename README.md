@@ -36,7 +36,7 @@ The project contains the following files:
   - The previous definitions are used within the `simulate_group_stage` function to simulate all the group-stage matches and store the corresponding stats for each team in the TEAMS dict. It finally returns a pandas dataframe containing the results of all matches.
   - The most complex task of the project is implemented via the `get_group_rank` function. 
   To define the final rank-position of each team in a given group, the [FIFA rules](https://digitalhub.fifa.com/m/2744a0a5e3ded185/original/FIFA-World-Cup-Qatar-2022-Regulations_EN.pdf) were consulted.
-  First, all the team-codes given as input are used to search the respective team-objects in TEAMS, from which the name, points, goal difference and goals scored are extracted.
+  First, all the team-codes given as input are used to search the respective team-objects in the TEAMS dict, from which the name, points, goal difference and goals scored are extracted.
   Hence a table of the group teams is organized into the `group_df` dataframe to then be sorted by the number of points, goal difference, and goals scored, in that preference order.
 
   If no teams out of the first 3 (since only 1st and 2nd matter [<u>this could be upgraded<u>]) are tied on all the criteria, return group_df as it is.
